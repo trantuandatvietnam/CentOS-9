@@ -488,8 +488,68 @@
   - User (Người tạo tệp /thư mục)
   - Group
 - Lệnh để thay đổi file ownship
+
   - `chown` và `chgrp`
     - `chown`: Thay đổi chủ sở hữu của một file
     - `chgrp`: Thay đổi sở hữu nhóm của một file
   - Option:
     - `-R`: Thay đổi quyền của thư mục mẹ và cả những thư mục bên trong nó nữa
+
+- Để thay đổi được các quyền sở hữu của một file bạn cần trong quyền `sudo`
+
+  - Để thay đổi user: `sudo chown <username> <filename>`
+  - Để thay đổi gropu: `sudo chgrp <groupname> <filename>`
+  - Để thay đổi cả user và group: `sudo chown <username>:<groupname> <filename>`
+
+- Để thoát khỏi người dùng root: `exit`
+
+### Access Control List (ACL)
+
+- ACL cung cấp một cơ chế cấp phép bổ sung, linh hoạt cho các hệ thống tệp, nó được thiết kế để hỗ trợ quyền với tệp UNIX, Nó cho phép bạn cấp quyền cho bất kì người dùng hoặc nhóm nào đối với bất kì disk resources nào
+- Mục đích của việc sử dụng ACL:
+  - Hãy nghĩ về một tình huống trong đó một người dùng cụ thể không là một thành viên trong nhóm mà bạn tạo ra, vì vậy nếu bạn tạo ra người dùng ABC và đó không phải là thành viên của group root, nhưng bạn vẫn muốn cấp cho một số quyền đọc hoặc ghi => Làm thế nào mà bạn có thể làm điều này mà không đặt người dùng đó thành thành viên của nhóm? => ACL giúp chúng ta làm điều đó
+- Chúng ta có thể làm điều này bằng cách thay đổi quyền của nhóm `other`, tuy nhiên chúng ta chỉ muốn chỉ định quyền này cho một người duy nhất, việc thay đổi quyền của nhóm `other` làm cho tất cả những người dùng khác có được quyền này => Điều đó là không khả thi
+- ACL được sử dụng để xác định quyền truy cập tùy ý chi tiết hơn cho các tệp và thư mục
+- Các lệnh được sử dụng để gán và loại bỏ quyền ACL là: (Các lệnh này cung cấp thông tin về các quyền hiện có của tệp và cho phép bạn thiết lập theo cách mà bạn muốn)
+
+  - `setfacl`
+  - `getfacl`
+
+- List of commands for setting up ACL:
+
+  1. To add permision for user
+
+  - `setfacl -m u:user:rwx /path/to/file`
+
+  2. To add permision for group
+
+  - `setfacl -m g:group:rw /path/to/file`
+
+  3. To allow all files or directories to inherit ACL, entries from the directory it is within
+
+  - `setfacl -Rm "entry" /path/to/dir`
+
+  4. To remove a specify entry
+
+  - `setfacl -x u:user /path/to/file` (Chỉ dành cho một người dùng cụ thể)
+
+  5. To remove all entries
+
+  - `setfacl -b path/to/file` (For all users)
+
+- Note:
+
+  - Mỗi khi gán quyền `ACL` cho một file/directory, nó sẽ thêm một dấu `+` ở cuối quyền
+  - Thiết lập với quyền `w` với `ACL` không cho phép bạn xóa một tệp
+
+- Ví dụ:
+- Ta có file sau, ta muốn chỉ định duy nhất một người dùng có quyền `rw`
+  ![acl](./imgs/acl.jpg)
+
+- Làm như sau:
+  ![acl_rs](./imgs/acl_result.jpg)
+
+- Sử dụng gạch thứ 4
+  ![acl_rs3](./imgs/acl3.jpg)
+
+- Muốn set toàn bộ quyền về như cũ thì sử dụng gạch đầu dòng thứ 5
