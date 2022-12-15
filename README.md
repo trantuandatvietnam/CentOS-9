@@ -553,3 +553,295 @@
   ![acl_rs3](./imgs/acl3.jpg)
 
 - Muốn set toàn bộ quyền về như cũ thì sử dụng gạch đầu dòng thứ 5
+
+### Help conmmand
+
+- There are 3 types of help command
+  - `whatis` + command_name
+  - command_name + `--help`
+  - `man` + command_name
+- Nếu thử các cách trên mà không được thì cần thực hiện `sudo mandb -c`, nếu không được nữa thì google
+
+- NOTE: Dùng lệnh `man` sẽ tốt hơn vì nó sẽ hiển thị chi tiết về command_name
+
+### TAB Completion and Up Arrow
+
+- Sử dụng tab để hoàn thành một path_file:
+  - VD: `ls dat + TAB` thì nó sẽ tự động hoàn thành nếu trong thư mục hiện tại của bạn có duy nhất file có tên bắt đầu bằng `dat`
+  - Còn nếu trong thư mục có nhiều file có tên bắt đầu bằng `dat...` thì sử dụng hai dấu `TAB` nó sẽ hiển thị tất cả những file bắt đầu bằng `dat` đó
+- Sử dụng `TAB` để hoàn thành nhanh một lệnh: Giả sử bạn muốn gõ lệnh `chmod` thì chỉ cần gõ `ch` sau đó bấm TAB thì nó sẽ tự động hoàn thành cho bạn (Chỉ hoàn thành nếu chỉ có một lệnh bắt đầu bằng `ch`, Nếu có nhiều lệnh bắt đầu bằng `ch` thì gõ hai lần `TAB` nó sẽ hiển thị tất cả các lệnh đó)
+
+- Sử dụng phím mũi tên lên khi muốn quay lại command trước đó
+
+### Adding text to file (Redireacts)
+
+- Có 3 cách đơn giản để thêm văn bản vào trong file:
+  - `vi`
+  - Redireact command ouput > or >>
+  - echo > or >>
+    - VD: `echo "Hello everyone" >> file_name`
+- Sự khác nhau giữa `>` và `>>`
+
+  - `>`: Ghi đè vào file
+  - `>>`: Chèn vào cuối file
+
+- Xuất một danh sách thư mục vào một file (Theo thứ tự thời gian gần nhất): `ls -ltr > ds`
+
+=> Rút ra nhận xét rằng, những lệnh nào hiển thị dạng console(Đầu ra của một lệnh trên cửa sổ console) đều có thể viết vào file:
+
+- Ví dụ: `echo "Helo"` xuất ra chữ `Hello` ở dạng console, `date` in ra console ngày hiện tại
+
+### Input and Output Redirects (>, >>, <, stdin, stdout and stderr) && Overview
+
+- There are 3 redirects in Linux
+
+  1. Standard input (stdin) and it has file descriptor number as 0
+  2. Standard output (stdout) and it has file descriptor number as 1
+  3. Standard error (stderr) and it has file descriptor number as 2
+
+- Trước khi đi vào các lệnh, chúng ta biết rằng chương trình đều sinh ra ouput, output thì thường bao gồm 2 phần, output mong muốn của chương trình và các error messages
+- Một chương trình chạy trên linux sẽ gửi đầu ra vào một file đặc biệt là stdout (standard output) và error messages đến stderr (standard error). Hai file này được link đến màn hình và không được save lại trong file.
+- Thêm vào đó, các chương trình thường lấy đầu vào từ stdin (standard input) được attach với bàn phím.
+- I/O rediretion cho phép chúng ta thay đổi nơi output ra và nơi input đến.
+
+a. Redirect standard output
+
+Để redirect output của một lệnh hay một chương trình ra một file khác stdout, chúng ta sử dụng ký hiệu > [file_name]. Ví dụ, để redirect output của lệnh ls ra một file tên foo.txt
+
+```
+/tmp ls > foo.txt
+➜  /tmp
+➜  /tmp ls -l foo.txt
+-rw-rw-r-- 1 hunguyen hunguyen 405 Th05 19 11:36 foo.txt
+```
+
+- Chúng ta sẽ thấy lệnh trên không in kết quả vì kết quả đã được redirect đến foo.txt rồi.
+- Vậy nếu ta thực hiện lệnh trên với một directory không tồn tại thì sao?
+
+```ubuntu
+➜  /tmp ls /foo/bar > foo.txt
+ls: cannot access '/foo/bar': No such file or directory
+➜  /tmp ls -l foo.txt
+-rw-rw-r-- 1 hunguyen hunguyen 0 Th05 19 11:40 foo.txt
+```
+
+- Chúng ta vẫn thấy kết quả lỗi in ra màn hình vì chúng ta mới chỉ redirect output thôi còn error thì vẫn được lưu trong stderr, file foo.txt thì không có gì vì output không trả ra gì cả.
+
+- Chúng ta có thể thấy là file foo.txt bị overwrite vì chúng ta đang sử dụng >, để append vào file output chúng ta phải sử dụng >>. Ví dụ:
+
+```ubutu
+➜  /tmp ls -l foo.txt
+-rw-rw-r-- 1 hunguyen hunguyen 20769 Th05 19 11:44 foo.txt
+➜  /tmp ls /home/hunguyen >> foo.txt
+➜  /tmp ls -l foo.txt
+-rw-rw-r-- 1 hunguyen hunguyen 21006 Th05 19 11:45 foo.txt
+```
+
+b. Redirect standard error
+
+- Một chương trình có thể sinh ra output trên rất nhiều file streams.
+- Chúng ta đã biết 3 loại file stream là stdin, stdout, stderr.
+- Shell tham chiếu chúng tương ứng với 3 file descriptor là 0, 1, 2.
+- Shell cho phép chúng ta định nghĩa I/O redirecion bằng cách sử dụng file descriptor number.
+
+=> Để redirect error chúng ta file sử dụng file descriptor tương ứng là 2:
+
+```unbutu
+➜  /tmp ls /foo/bar 2> foo-error.txt
+➜  /tmp
+➜  /tmp ls -l foo-error.txt
+-rw-rw-r-- 1 hunguyen hunguyen 56 Th05 19 11:58 foo-error.txt
+```
+
+=> như vậy chúng ta đã không thấy output error trên màn hình nữa mà nó đã được update trong file foo-error.txt
+
+c. Redirect output & error ra cùng một file
+
+- Chúng ta có thể sử dụng một trong các cách sau để redirect cả error và output ra cùng một file
+
+```ubuntu
+ls -l /bin/usr > ls-output.txt 2>&1
+ls -l /bin/usr &> ls-output.txt
+ls -l /bin/usr &>> ls-output.txt
+```
+
+- Cách đầu tiên là cách thực hiện trong shell ở các phiên bản cũ: redirect stdout ra một file sau đó redirect stderr ra stdout (lưu ý đúng thứ tự trên nếu không sẽ không chính xác).
+- Cách thứ hai là là cho các version đến hiện tại của shell
+- Dòng 3 là redirect và append vào một file.
+
+d. Loại bỏ những đầu ra không mong muốn
+
+- Đôi khi chúng ta có thể không muốn nhìn thấy output của chương trình ra màn hình lẫn ra file. Hệ thống cung cấp một cách để redirect những đầu ra này ra một file đặc biệt gọi là /dev/null. File này chấp nhận đầu vào và không làm gì với nó cả. Để loại bỏ những error message không mong muốn chúng ta có thể thực hiện lệnh sau:
+
+```unbutu
+ls -l /bin/usr 2> /dev/null
+```
+
+e. Redirect standard input
+
+- Trước hết chúng ta sẽ giới thiệu về lệnh `cat`. Lệnh `cat` dùng để nối các file và redirect chúng ra stdout:
+
+```unbuntu
+cat [file...]
+```
+
+- trong đó [file...] có thể là một hoặc nhiều file.
+
+- nếu chúng ta sử dụng cat mà không truyền vào tham số nào. Nó sẽ nhận nội dung chúng ta nhận vào bàn phím và in chúng ra màn hình, sau khi chúng ta nhấn `ctrl+d`.
+
+```ubuntu
+➜  ~ cat
+this is a demo
+this is a demo
+➜  ~
+```
+
+- chúng ta cũng có thể redirect đầu ra của lệnh cat vào một file, làm cat giống như một dummy text editor
+
+```ubuntu
+➜  /tmp cat > foo.txt
+This is a demonstration
+➜  /tmp cat foo.txt
+This is a demonstration
+```
+
+- Sau đây là cách chúng ta có thể redirect stdin, chuyển input từ 1 file thay vì bàn phím:
+
+```ububtu
+➜  /tmp cat < foo.txt
+This is a demonstration
+```
+
+- Nhìn ví dụ trên thì có vẻ hơi dummy nhưng đó chính là cách chúng ta hiểu về redirect input với operator <, mặc dù việc này không cải thiện việc dùng câu lệnh cat chút nào.
+
+f. Pipelines
+
+- Pipeline là chức năng redirect standard output của một command đến standard input của một command khác bằng operator `|`
+- Chúng ta có thể hiển thị content của một directory lớn trong less để có thể search, hiển thị phân trang:
+
+```unbuntu
+$ ls -l /usr/bin | less
+```
+
+- Filters
+
+  - Chúng ta có thể sử dụng filter trong pipeline để biến đầu ra (output của một lệnh) thành kết quả mong muốn rồi đưa ra standard output.
+  - Các filter phổ biến là: sort, uniq
+  - Ví dụ, để nhìn thấy list uniq của một vài directory trong less:
+
+    > $ ls /bin /usr/bin | sort | uniq | less
+
+  - Hoặc chúng ta có thể sử dụng option -d của uniq để chỉ nhìn thấy list những dòng có từ một lần xuất hiện trở lên
+
+- `wc - line, word, byte count`
+
+  - câu lệnh wc dùng để đếm dòng, từ, byte trong một file. Chúng ta có thể dùng nó để đếm số uniq file, directory trong một directory.
+
+  ```ubuntu
+  $ ls /bin /usr/bin | sort | uniq | wc -l
+  2728
+  ```
+
+g. `grep`
+
+- Có lẽ chúng ta đã quá quen với lệnh grep rồi, dùng để match tên file/directory nội dung file. Khi gặp một file có chứa pattern cần search nó sẽ in dòng đó ra standard output
+
+- Câu lệnh: `grep pattern [file...]`
+- VD:
+
+```ubuntu
+➜  /tmp ls /bin /usr/bin | sort | uniq | grep zip
+bunzip2
+bzip2
+bzip2recover
+funzip
+gpg-zip
+gunzip
+gzip
+mzip
+preunzip
+prezip
+prezip-bin
+unzip
+unzipsfx
+zip
+zipcloak
+zipdetails
+zipgrep
+zipinfo
+zipnote
+zipsplit
+```
+
+h. Lệnh `head/tail`
+
+- Hai câu lệnh trên tương ứng để in ra phần đầu và phần cuối của file. Mặc định chúng sẽ in ra 10 dòng đầu hoặc cuối của một file. Chúng ta có thế sử dụng option `-n [number of lines]` để định nghĩa số dòng muốn in ra
+- VD
+
+```ubuntu
+➜  /tmp ls /bin /usr/bin | sort | uniq | head -n 4
+
+[
+2to3
+2to3-2.7
+➜  /tmp ls /bin /usr/bin | sort | uniq | tail -n 4
+zmore
+znew
+zsh
+zsh5
+```
+
+- `tail` có một option -f mà chắc ai cũng biết để output realtime content của một file.
+
+- `tee`: đọc stdin và redirect nó ra một hoặc nhiều file khác nhau, chúng ta dùng nó để ghi lại một kết quả cụ thể trong một đoạn nhất định của pipelines, tưởng tượng nó là ống nước chữ T để chia nguồn nước vậy
+
+```ubuntu
+➜  /tmp ls /usr/bin | tee ls.txt | grep zip
+funzip
+gpg-zip
+mzip
+preunzip
+prezip
+prezip-bin
+unzip
+unzipsfx
+zip
+zipcloak
+zipdetails
+zipgrep
+zipinfo
+zipnote
+zipsplit
+➜  /tmp head ls.txt
+[
+2to3
+2to3-2.7
+2to3-3.5
+411toppm
+7z
+7za
+a11y-profile-manager-indicator
+aa-enabled
+aclocal
+```
+
+- Một ví dụ khác về gửi mail: `mail -s "Office memo" dat130902@gmail.com < memoletter`
+
+### Standard output to a file (tee command)
+
+- `tee` là câu lệnh dùng để lưu trữ và xem đồng thời cả kết quả đầu ra của bất kì lệnh nào
+- Về cơ bản, lệnh này phá vỡ đầu ra của một chương trình để nó có thể được hiển thị trên màn hình và vừa có thể được lưu thành một tệp
+
+![tee command](./imgs/tee-command-linux.jpg)
+
+- Ta có ví dụ sau:
+
+  - `echo "Hello everyone" > hello.txt` => Lệnh này thực hiện ghi nội dung vào tệp, tuy nhiên nó không hiển thị ra màn hình
+  - Muốn nó vừa lưu, vừa hiển thị ra màn hình thì làm như sau: `echo "Hello everyone" | tee hello.txt `
+  - Mỗi lần thực hiện như trên thì nó sẽ xóa tệp và tạo tệp mới sau đó ghi nội dung mới vào tệp
+
+  => Muốn nó ghi vào cuối thì làm như sau: `echo "Hello everyone" | tee -a hello.txt `
+
+- Xem số kí tự của một file thì ta sử dụng: `wc -c hello.txt` (-c ở đây là character)
+- Xem danh sách tệp hiện tại đồng thời lưu nó vào một tệp: `ls -l | tee listdir.txt`
+- Xem danh sách tệp hiện tại đồng thời lưu nó vào nhiều file khác nhau: `ls -l | tee listdir1.txt listdir2.txt...`
