@@ -498,7 +498,7 @@
 - Để thay đổi được các quyền sở hữu của một file bạn cần trong quyền `sudo`
 
   - Để thay đổi user: `sudo chown <username> <filename>`
-  - Để thay đổi gropu: `sudo chgrp <groupname> <filename>`
+  - Để thay đổi group: `sudo chgrp <groupname> <filename>`
   - Để thay đổi cả user và group: `sudo chown <username>:<groupname> <filename>`
 
 - Để thoát khỏi người dùng root: `exit`
@@ -829,6 +829,8 @@ aclocal
 
 ### Standard output to a file (tee command)
 
+1. TỔNG QUAN
+
 - `tee` là câu lệnh dùng để lưu trữ và xem đồng thời cả kết quả đầu ra của bất kì lệnh nào
 - Về cơ bản, lệnh này phá vỡ đầu ra của một chương trình để nó có thể được hiển thị trên màn hình và vừa có thể được lưu thành một tệp
 
@@ -845,3 +847,116 @@ aclocal
 - Xem số kí tự của một file thì ta sử dụng: `wc -c hello.txt` (-c ở đây là character)
 - Xem danh sách tệp hiện tại đồng thời lưu nó vào một tệp: `ls -l | tee listdir.txt`
 - Xem danh sách tệp hiện tại đồng thời lưu nó vào nhiều file khác nhau: `ls -l | tee listdir1.txt listdir2.txt...`
+
+2. CHI TIẾT
+   a. SYNTAX: `tee [OPTION]...[FILE]...`
+
+b. OPTION:
+
+- `-a `: Không ghi đè lên tệp mà nối vào cuối tệp
+- Tìm hiểu thêm trên google nhé
+
+### Pipes (|)
+
+1. Overview
+
+- `Pipes` (Đường ống) là một dạng redirection(Chuyển standard output sang một số đích khác), nó được sử dụng trong linux và các hệ điều hành giống Unix khác để gửi đầu ra của một lệnh/ chương trình/ tiến trình khác để xử lí thêm. Các hệ điều hành Unix/Linux cho phép đầu ra tiêu chuẩn của một lệnh được kết nối đến đầu vào tiêu chuẩn của một lệnh khác
+- `Pipe` được sử dụng để kết hợp hai hoặc nhiều câu lệnh và trong đó, đầu ra của một lệnh đóng vai trò là đầu vào của một lệnh khác và đầu ra của lệnh này có thể lại đóng vai trò là đầu vào của lệnh tiếp theo... Nó cũng có thể được hình dung như một kết nối tạm thời giữa hai hay nhiều lệnh / chương trình/ tiến trình, các chương trình dòng lệnh thực hiện xử lí tiếp theo được gọi là filters(Bộ lọc)
+- Kết nối trực tiếp này giữa các lệnh/ chương trình/ tiến trình cho phép chúng hoạt động đồng thời và cho phép dữ liệu được truyền liên tục giữa chúng thay vì phải truyền qua các tệp văn bản tạm thời hoặc qua các màn hình hiển thị
+- `Pipes` là một chiều, tức là dữ liệu chảy từ trái qua phải thông qua các pineline.
+
+2. Details
+   a. SYNTAX:
+
+- `command_1 | command_2 | command_3 | .... | command_N`
+  b. EX:
+- VÍ DỤ 1:
+
+  - Thực hiện liệt kê các tệp, sau đó đưa chúng làm đầu vào của lệnh `more`: `ls -l | more`
+
+    - Output:
+
+      ![Pipe](/imgs/pipe-1.png)
+
+    - Lệnh trên tương đương với dãy lệnh sau:
+
+  ```ubuntu
+    ls -l > temp
+    more < temp
+    rm temp
+  ```
+
+- VÍ DỤ 2:
+
+  - Sử dụng `sort` và lệnh `uniq` để sắp xếp một file và in ra các giá trị duy nhất: `sort record.txt | uniq`
+  - ![Pipe2](/imgs/pipe-2.png)
+
+- VÍ DỤ 3:
+
+  - Sử dụng `head` và `tail` để in các dòng trong một phạm vi cụ thể trong một tệp: `cat sample2.txt | head -7 | tail -5`
+  - Lệnh trên chọn 7 dòng đầu tiên thông qua lệnh `head -7` và lệnh đó sẽ được nhập vào lệnh `tail -5`, cuối cùng sẽ in ra 5 dòng cuối cùng của 7 dòng đó
+
+- VÍ DỤ 4:
+
+  - Sử dụng `cat, grep, tee và wc` để đọc mục nhập cụ thể từ người dùng và lưu trữ trong một tệp và in số dòng: `cat result.txt | grep "Rajat Dua" | tee file2.txt | wc -l`
+  - Lệnh trên sẽ select "Rajat Dua" và lưu chúng trong file `file2.txt` và in tổng số dòng phù hợp với "Rajat Dua"
+
+  - ![Pipe5](/imgs/pipe-5.png)
+
+
+### File Maintenance Commands (cp, rm, mv, mkdir, rmdir)
+
+- `cp`: Coppy từ tệp này sang tệp khác
+- `rm`: Xóa file
+- `mv`: Di chuyển tệp
+- `mkdir`: Tạo tệp
+- `rmdir`: Xóa thư mục (Có thể sử dụng `rm -r`)
+
+1. Lệnh `cp`
+- Giả sử ta có một file `test1.txt` chứa nội dung "Hello world", ta muốn coppy file này sang một file khác có tên là `test2.txt` thì chỉ cần thực hiện như sau: `cp test1.txt test2.txt` (Lưu ý, khi thực hiện câu lệnh này nếu file test2.txt chưa tồn tại thì nó sẽ tự động tạo nhé, còn nếu file test2.txt đã tồn tại rồi thì nó sẽ ghi đè lên file này) 
+
+2. Lệnh `rm` được sử dụng để xóa một file
+- SYNTAX: `rm file_path`
+
+3. Lệnh `mv` được sử dụng để di chuyển một file
+- SYNTAX sử dụng để di chuyển file tới một folder: `mv file_path folder_path`
+- SYNTAX sử dụng để thay đổi tên file: `mv filen_name_old file_name_new` (Lưu ý, nếu file_name_new chưa được tạo thì nó tự tạo, nếu file_name_new được tạo rồi thì nó sẽ ghi đè)
+
+4. Lệnh `mkdir` được sử dụng để tạo một folder mới
+- SYNTAX: `mkdir file_path_name`
+
+5. `rmdir`
+- SYNTAX: `rmdir file_path` 
+- Cú pháp trên chỉ xóa được những folder trống thôi
+- `rm -Rf` sẽ mạnh tay gỡ bỏ tất cả các thư mục con và nội dung trong nó
+
+6. Thay đổi quyền sở hữu nhanh
+- Giả sử ta có folder `folder` đang có quyền sỡ hữu `owner` và `group` là `trantuandat`
+
+![chown speed](./imgs/chown.jpg)
+
+=> Nếu muốn thay đổi `owner` thành `root` và `group` thành `root` thì cần thực hiện như sau:
+  - `sudo chown root trantuandat`
+  - `sudo chgrp root trantuandat`
+
+- Tuy nhiên 2 lệnh trên có thể được viết rút gọn thành một lệnh như sau: `sudo chown root:root folder`
+
+Và đây là kết quả: 
+
+![chown speed2](./imgs/chown2.jpg)
+
+
+### File Display Commands (cat, less, more, head, tail)
+1. `cat`
+- Xem toàn bộ nội dung trong file
+2. `more`
+- Xem toàn bộ nội dung trong file , tuy nhiên ban đầu nó chỉ hiển thị trang đầu tiên, để xem tiếp nội dung bấm `Enter` nó sẽ cuộn từng dòng tiếp theo, bấm `Space` nó sẽ hiển thị trang tiếp theo
+- Lệnh `more` là một lệnh tiện dụng, thế nhưng nó cũng có một vài nhược điểm, khi ta close một file thì toàn bộ nội dung file này sẽ hiển thị ở cửa sổ terminal. Người dùng cần `clear` màn hình mỗi khi đọc xong file
+3. `less`
+- Xem toàn bộ nội dung trong file nhưng hiển thị từng dòng một
+- `less` sinh ra để giải quyết vấn đề của `more`, nó có chức năng giống như more nhưng khi close file nó sẽ không giữ nội dung file trên màn hình terminal
+- Lệnh `less` cũng đi kèm với chức năng tìm kiếm tích hợp, nó cho phép bạn đánh dấu các phần của tệp mà bạn đang tìm kiếm, để tìm kiếm thì bạn cần gõ `/ten_noi_dung_ban_muon_tim` (Khi bạn đang ở chế độ xem với less, thực hiện đăng sau dấu `:`) 
+4. `head`
+- Xem số lượng dòng đầu tiên (số lượng này được quy định trong option)
+5. `tail`
+- Xem số lượng dòng cuối cùng của file(số lượng này cũng được quy định trong option của câu lệnh) 
