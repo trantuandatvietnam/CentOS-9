@@ -903,7 +903,6 @@ b. OPTION:
 
   - ![Pipe5](/imgs/pipe-5.png)
 
-
 ### File Maintenance Commands (cp, rm, mv, mkdir, rmdir)
 
 - `cp`: Coppy từ tệp này sang tệp khác
@@ -913,50 +912,308 @@ b. OPTION:
 - `rmdir`: Xóa thư mục (Có thể sử dụng `rm -r`)
 
 1. Lệnh `cp`
-- Giả sử ta có một file `test1.txt` chứa nội dung "Hello world", ta muốn coppy file này sang một file khác có tên là `test2.txt` thì chỉ cần thực hiện như sau: `cp test1.txt test2.txt` (Lưu ý, khi thực hiện câu lệnh này nếu file test2.txt chưa tồn tại thì nó sẽ tự động tạo nhé, còn nếu file test2.txt đã tồn tại rồi thì nó sẽ ghi đè lên file này) 
+
+- Giả sử ta có một file `test1.txt` chứa nội dung "Hello world", ta muốn coppy file này sang một file khác có tên là `test2.txt` thì chỉ cần thực hiện như sau: `cp test1.txt test2.txt` (Lưu ý, khi thực hiện câu lệnh này nếu file test2.txt chưa tồn tại thì nó sẽ tự động tạo nhé, còn nếu file test2.txt đã tồn tại rồi thì nó sẽ ghi đè lên file này)
+- VD: cp file log: `cp /var/log/messages .` (Dấu `.` đại diện cho thư mục hiện tại đang trỏ tới)
 
 2. Lệnh `rm` được sử dụng để xóa một file
+
 - SYNTAX: `rm file_path`
 
 3. Lệnh `mv` được sử dụng để di chuyển một file
+
 - SYNTAX sử dụng để di chuyển file tới một folder: `mv file_path folder_path`
 - SYNTAX sử dụng để thay đổi tên file: `mv filen_name_old file_name_new` (Lưu ý, nếu file_name_new chưa được tạo thì nó tự tạo, nếu file_name_new được tạo rồi thì nó sẽ ghi đè)
 
 4. Lệnh `mkdir` được sử dụng để tạo một folder mới
+
 - SYNTAX: `mkdir file_path_name`
 
 5. `rmdir`
-- SYNTAX: `rmdir file_path` 
+
+- SYNTAX: `rmdir file_path`
 - Cú pháp trên chỉ xóa được những folder trống thôi
 - `rm -Rf` sẽ mạnh tay gỡ bỏ tất cả các thư mục con và nội dung trong nó
 
 6. Thay đổi quyền sở hữu nhanh
+
 - Giả sử ta có folder `folder` đang có quyền sỡ hữu `owner` và `group` là `trantuandat`
 
 ![chown speed](./imgs/chown.jpg)
 
 => Nếu muốn thay đổi `owner` thành `root` và `group` thành `root` thì cần thực hiện như sau:
-  - `sudo chown root trantuandat`
-  - `sudo chgrp root trantuandat`
+
+- `sudo chown root trantuandat`
+- `sudo chgrp root trantuandat`
 
 - Tuy nhiên 2 lệnh trên có thể được viết rút gọn thành một lệnh như sau: `sudo chown root:root folder`
 
-Và đây là kết quả: 
+Và đây là kết quả:
 
 ![chown speed2](./imgs/chown2.jpg)
 
-
 ### File Display Commands (cat, less, more, head, tail)
+
 1. `cat`
+
 - Xem toàn bộ nội dung trong file
+
 2. `more`
+
 - Xem toàn bộ nội dung trong file , tuy nhiên ban đầu nó chỉ hiển thị trang đầu tiên, để xem tiếp nội dung bấm `Enter` nó sẽ cuộn từng dòng tiếp theo, bấm `Space` nó sẽ hiển thị trang tiếp theo
 - Lệnh `more` là một lệnh tiện dụng, thế nhưng nó cũng có một vài nhược điểm, khi ta close một file thì toàn bộ nội dung file này sẽ hiển thị ở cửa sổ terminal. Người dùng cần `clear` màn hình mỗi khi đọc xong file
+
 3. `less`
+
 - Xem toàn bộ nội dung trong file nhưng hiển thị từng dòng một
 - `less` sinh ra để giải quyết vấn đề của `more`, nó có chức năng giống như more nhưng khi close file nó sẽ không giữ nội dung file trên màn hình terminal
-- Lệnh `less` cũng đi kèm với chức năng tìm kiếm tích hợp, nó cho phép bạn đánh dấu các phần của tệp mà bạn đang tìm kiếm, để tìm kiếm thì bạn cần gõ `/ten_noi_dung_ban_muon_tim` (Khi bạn đang ở chế độ xem với less, thực hiện đăng sau dấu `:`) 
+- Lệnh `less` cũng đi kèm với chức năng tìm kiếm tích hợp, nó cho phép bạn đánh dấu các phần của tệp mà bạn đang tìm kiếm, để tìm kiếm thì bạn cần gõ `/ten_noi_dung_ban_muon_tim` (Khi bạn đang ở chế độ xem với less, thực hiện đăng sau dấu `:`)
+
 4. `head`
+
 - Xem số lượng dòng đầu tiên (số lượng này được quy định trong option)
+- Xem hai dòng đầu tiên trong file `messages`: `head -2 messages`
+
 5. `tail`
-- Xem số lượng dòng cuối cùng của file(số lượng này cũng được quy định trong option của câu lệnh) 
+
+- Xem số lượng dòng cuối cùng của file(số lượng này cũng được quy định trong option của câu lệnh)
+- Xem hai dòng cuối cùng trong file `messages`: `tail -2 messages`
+
+### Filters / Text Processing Commands (Bộ lọc, bộ xử lí văn bản)
+
+- `cut`
+- `awk`
+- `grep and egrep`
+- `sort`
+- `uniq`
+- `wc`
+
+### Cut command
+
+1. Overview
+
+- Lệnh `cut` trong UNIX là lệnh được sử dụng để cut các phần tử của mỗi dòng và ghi kết quả vào đầu ra tiêu chuẩn. Nó có thể được sử dụng để cắt các phần của một dòng theo vị trí byte. Về cơ bản, lệnh `cut` cắt một dòng và trích xuất văn bản. Khi sử dụng lệnh này cần chỉ định cho nó option, nếu không nó sẽ báo lỗi
+- Nếu có nhiều tên tệp được cung cấp thì dữ liệu từ mỗi tệp không được đặt trước tên tệp của nó
+
+2. DETAILS
+
+- SYNTAX: `cut OPTION... [FILE]...`
+- Để kiểm tra version của phiên bản hiện tại: `cut --version`
+- Lấy ra toàn bộ kí tự đầu tiên của mỗi dòng: `cut -c1 file_name`
+- Lấy ra kí tự được chỉ định của mỗi dòng: `cut -c2,3,4,5 file_name`
+- Lấy ra vị trí (range) được chỉ định: `cut -c1-5 file_name` (Lấy ra từ kí tự đầu tiên đến kí tự thứ năm)
+- Lấy ra vị trí (range) được chỉ định: (Nhiều khoảng) `cut -c1-5,7-9 file_name` (Lấy ra từ kí tự đầu tiên đến kí tự thứ năm và kí tự thứ 7 đến 9 của dòng)
+
+**OPTIONS**:
+
+a. `-b`(byte): Trích xuất các byte cụ thể, bạn cần phải tuân theo tùy chọn `-b` với danh sách các số byte được phân tách bằng dấu `,`, Phạm vi byte cũng có thể được chỉ định bằng dấu gạch nối `-`, `TAB và BACKSPACE` được xử lí như một kí tự byte
+
+```ubuntu
+$ cat state.txt
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chhattisgarh
+
+$ cut -b 1,2,3 state.txt
+And
+Aru
+Ass
+Bih
+Chh
+
+$ cut -b 1-3,5-7 state.txt
+Andra
+Aruach
+Assm
+Bihr
+Chhtti
+
+$ cut -b 1- state.txt (Biểu thị từ bit đầu tiên đến bit cuối cùng)
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chhattisgarh
+
+$ cut -b -3 state.txt (Biểu thị từ bit đầu tiên đến bit thứ 3)
+And
+Aru
+Ass
+Bih
+Chh
+```
+
+b. `-c` (column): Để cắt theo kí tự sử dụng tùy chọn `-c`. Đây có thể là các số được phân tách bằng dấu `,` hoặc một dãy số được phân tách bằng dấu `-`. `TABS and BACKSPACE` được coi là một kí tự - SYNTAX: `$cut -c [(k)-(n)/(k),(n)/(n)] filename` - `k` biểu thị cho vị trí bắt đầu của kí tự và `n` biểu thị cho vị trí kết thúc của kí tự trong từng dòng (nếu k và n được phân tách bởi dấu `-`, nếu không chúng chỉ là vị trí của từng kí tự trong mỗi dòng từ tệp được lấy dưới dạng đầu vào)
+
+```ubuntu
+$ cut -c 2,5,7 state.txt  (Lệnh này cắt kí tự 2 5 7 của mỗi dòng)
+nr
+rah
+sm
+ir
+hti
+
+$ cut -c 1-7 state.txt  (Lệnh này cắt từ kí tự đầu tiên đến kí tự thứ 7 của mỗi dòng)
+Andhra
+Arunach
+Assam
+Bihar
+Chhatti
+
+$ cut -c 1- state.txt (Cắt từ kí tự đầu tiên đến kí tự cuối cùng, lệnh này chỉ chỉ định kí tự đầu tiên, phần chỉ định kí tự cuối cùng bị bỏ qua)
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chhattisgarh
+
+$ cut -c -5 state.txt (Cắt từ kí tự đầu tiên đến kí tự thứ 5, ở đây phần chỉ định kí tự đầu bị bỏ qua)
+Andhr
+Aruna
+Assam
+Bihar
+Chhat
+```
+
+- Ví dụ: Muốn xem quyền của Owner trong tất cả các tệp:
+
+![Cut -c option](./imgs/cutc.jpg)
+
+c. `f` (field)
+
+- Trong khi option `-c` hữu ích cho các dòng cố định, tuy nhiên hầu hết các dòng trong Unix đều không cố định.
+
+=> Để extract(trích xuất) thông tin hữu ích, bạn nên cắt theo field(trường) thay vì theo cột. Danh sách số trường được chỉ định phải được phân tách bởi dấu `,`
+
+- Phạm vi không đưuọc mô tả với tùy chọn `f`. `cut` sử dụng `TAB` làm dấu phân cách trường mặc định. Tuy nhiên nó cũng có thể hoạt động với dấu phân cách khác bằng cách sử dụng tùy chọn `-d`
+
+**NOTE: ** Space không phải là dấu phân tách trong UNIX
+
+- SYNTAX: `$cut -d "delimiter" -f (field number) file.txt`
+- Giống như trong tệp state.txt, các trường được phân tách bằng dấu cách, nếu tùy chọn `-d` không được sử dụng thì nó sẽ in toàn bộ dòng
+
+```ubuntu
+$ cut -f 1 state.txt
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chhattisgarh
+
+$ cut -d " " -f 1 state.txt
+Andhra
+Arunachal
+Assam
+Bihar
+Chhattisgarh
+
+$ cut -d " " -f 1-4 state.txt (Lệnh in trường từ đầu tiên đến thứ tư của mỗi dòng)
+Output:
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chhattisgarh
+```
+
+- Xem ví dụ sau:
+
+![cut command](./imgs/cut%20command.jpg)
+
+![cut command2](./imgs/cut%20command2.jpg)
+
+![cut command3](./imgs/cut3.jpg)
+
+![cut command4](./imgs/cut4.jpg)
+
+d. `-complement`: Bổ sung cho đầu ra. Tùy chọn này có thể được sử dụng với các tùy chọn khác với `-f` hoặc `-c`
+
+```ubuntu
+$ cut --complement -c 5 state.txt
+Andha Pradesh
+Arunchal Pradesh
+Assa
+Biha
+Chhattisgarh
+```
+
+![cut command5](./imgs/cut5.jpg)
+
+e. `–output-delimiter`: (Dấu phân cách đầu ra): Theo mặc định, dấu phân cách đầu ra giống như dấu phân cách đầu vào mà chúng tôi đã chỉ định tùy chọn cut với option `-d`. Để thay đổi dấu phân cách đầu ra hãy sử dụng tùy chọn: `-output-delimiter="dấu phân cách"`
+
+```ubuntu
+$ cut -d " " -f 1,2 state.txt --output-delimiter='%'
+Andhra%Pradesh
+Arunachal%Pradesh
+Assam
+Bihar
+Chhattisgarh
+```
+
+f. Using with pipe
+
+```ubuntu
+$ cat state.txt | cut -d ' ' -f 1 | sort -r
+Chhattisgarh
+Bihar
+Assam
+Arunachal
+Andhra
+
+$ cat state.txt | head -n 3 | cut -d ' ' -f 1 > list.txt
+$ cat list.txt
+Andhra
+Arunachal
+Assam
+```
+
+- Lưu ý: Dấu phân cách có thể không cho vào ngoặc kép (Trừ dấu khoảng trắng)
+
+### awk - Text processors commands
+
+- `awk` là tiện ích/ ngôn ngữ được thiết kế để truy xuất dữ liệu
+- VD: `awk '{print $1}' file_name` (Hiển thị cột đầu tiên của `file_name`): Rất hữu ích trong trường hợp có một file chứa danh sách fullname và ta muốn lấy ra danh sách chỉ chứa tên của file này thôi
+
+- Xem ví dụ sau: Để in ra cột 1 và cột 3 của ouput thì chúng ta có thể làm như sau:
+
+![awk](./imgs/awk.jpg)
+
+- Để lấy ra cột cuối cùng có thể làm như sau: `awk '{print $NF} file_name'`
+
+- Để tìm kiếm một từ cụ thể sử dụng `awk`?
+
+  - `awk '/Jenlly/ {print}' file_name`
+
+  - ![awk-2](./imgs/awk2.jpg)
+
+- Sử dụng `awk` thay cho việc sử dụng `cut` để lấy ra field
+
+![awk-3](./imgs/awk3.jpg)
+
+![awk-4](./imgs/awk4.jpg)
+
+![awk-5](./imgs/awk5.jpg)
+
+=> Trong các ví dụ trên, nó đang ngắn cách bởi dấu `:` và thực hiện `$1` là lấy dấu ngăn cách đầu tiên, `$2` là thực hiện lấy dấu ngăn cách thứ 2
+
+![awk-6](./imgs/awk6.jpg)
+
+- `awk 'length($0) > 15' file`
+
+![awk-7](./imgs/awk7.jpg)
+
+- `ls -l | awk '{if($9 == "Dat") print $0;}'`
+
+![awk-8](./imgs/awk8.jpg)
+
+- `ls -l | awk '{print NF}'`: Đếm số lượng cột của mỗi dòng
+
+### grep/egrep - Text Processors Commands
+
+1. Grep
+
+- Là viết tắt của `global regular expression print`, nói một cách đơn giản thì đây là tính năng tìm kiếm của Linux
+- Để kiểm tra phiên bản của lệnh `grep` thực hiện như sau: `grep --version OR grep --help`
+- Tìm kiếm nội dung trong file: `grep keyword file_name` (Nó sẽ hiển thị ra các dòng chứa keyword. đồng thời tô đỏ màu của keyword đó)
