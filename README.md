@@ -1217,3 +1217,348 @@ Assam
 - Là viết tắt của `global regular expression print`, nói một cách đơn giản thì đây là tính năng tìm kiếm của Linux
 - Để kiểm tra phiên bản của lệnh `grep` thực hiện như sau: `grep --version OR grep --help`
 - Tìm kiếm nội dung trong file: `grep keyword file_name` (Nó sẽ hiển thị ra các dòng chứa keyword. đồng thời tô đỏ màu của keyword đó)
+
+- `grep -c keyword file`: Nếu kết quả tìm kiếm có cực kì nhiều thì sử dụng lệnh này để đếm só lần xuất hiện của keyword đó
+
+- `grep -i keyword file`: Nếu khi sử dụng những cách trên thì nó sẽ tìm kiếm đúng theo định dạng keyword truyền vào, nghĩa là nếu mình tìm kiếm theo chữ viết hoa thì file của ta phải chứa đúng chữ viết hoa đó nó mới tìm được. để khắc phục vấn đề đó ra sử dụng câu lệnh này.
+
+- `grep -n keyword file`: Cho biết vị trí xuất hiện (Tính theo dòng) của `keyword` trong file
+- `grep -v keyword file`: Hiển thị tất cả các dòng ngoại trừ `keyword`, ngoài ra cũng có thể sử dụng kết hợp `-vi` để có được tính năng không phân biệt chữ hoa chữ thường (Giống multiple options)
+
+- `grep keyword file | awk '{print $1}'`: Tìm kiếm với keyword và chỉ hiển thị cột đầu tiên sử dụng pipe (|)
+
+![Grep](./imgs/grep.jpg)
+
+- `egrep -i "keyword|keyword2|...keywordN" file`: Tìm kiếm 2 từ một lúc, các option của lệnh này cũng giống lệnh `grep` bên trên
+
+### sort/uniq - Text Processors Commands
+
+- Lệnh `sort` sẽ sắp xếp theo kí tự anlphabet
+- Lệnh `uniq` lọc các dòng bị trùng lặp
+
+- Để kiểm tra phiên bản `sort` ta sử dụng `sort --version` hoặc `sort --help`
+- `sort file`: Sắp xếp file theo kí tự alb
+- `sort -r file`: Sắp xếp file theo kí tự ngược lại với alb (Từ dưới lên đó, chữ `r` ở đây là resever)
+- `sort -k_number file`: Sắp xếp theo field number(Lựa chọn cột để sắp xếp). Bình thường nếu không sử dụng option này thì nó sẽ mặc định sắp xếp theo chữ cái đầu tiên(Nếu trùng thì nó lại dịch tiếp và so sánh 2 kí tự tiếp theo) của dòng đó theo alpha
+  - Lưu ý: `_number` là một số chỉ định cho vị trí cột
+  - VD: `sort -k2 file`
+  - Nếu `number_field` không hợp lệ (Số này lớn hơn số field trong từ) thì sẽ lại sắp xếp theo mặc định từ chữ cái đầu tiên
+- `sort -k9`: Sắp xếp theo field cuối cùng của mỗi dòng
+
+  - VD: `ls -l | sort -k9`
+
+- `uniq file`: Loại bỏ các bản sao
+
+  - Tuy nhiên để thực hiện được lệnh này thì bạn phải sắp xếp nó trước
+  - VD: `sort file_name | uniq`
+
+- `sort file_name | uniq -c`: Sắp xếp && lọc uniq và hiển thị số lượng xuất hiện của mỗi dòng trong file (Giống như việc gom nhóm vậy)
+- `sort file_name | uniq -d`: Chỉ hiển thị những dòng lặp lại
+
+### wc - Text Processors Commands
+
+1. OVERVIEW
+
+- `wc` là viết tắt của `word count`
+- Check version and help: `wc --version` OR `wc --help`
+- Nó được sử dụng để tìm ra số dòng, số từ, số bytes và số kí tự được chỉ định ở đối số
+- Theo mặc định nó sẽ hiển thị đầu ra 4 cột
+  - Cột đầu tiên hiển thị số dòng của file được chỉ định
+  - Cột thứ 2 hiển thị số lượng từ có trong tệp
+  - Cột thứ 3 hiển thị số lượng kí tự có trong tệp
+  - Cột thứ 4 hiển thị chính tên của file được chỉ định ở arguments
+
+2. SYNTAX
+
+- `wc [OPTION]... [FILE]...`
+
+3. VD
+
+- Chúng ta có 2 file tên là `state.txt` và `capital.txt` chứa 5 tên của các bang và thủ đô tương ứng của Ấn Độ như sau:
+
+```ubuntu
+$ cat state.txt
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chhattisgarh
+
+$ cat capital.txt
+Hyderabad
+Itanagar
+Dispur
+Patna
+Raipur
+```
+
+- Thực hiện lệnh:
+
+```ubuntu
+$ wc state.txt
+ 5  7 58 state.txt
+
+$ wc capital.txt
+ 5  5 39 capital.txt
+```
+
+- Passing more than one file name in the argument.
+
+```ubuntu
+$ wc state.txt capital.txt
+  5   7  58 state.txt
+  5   5  39 capital.txt
+ 10  12  97 total
+```
+
+- NOTE: Khi truyền vào hơn 1 file làm đối số thì nó sẽ hiển thị thông tin 4 cột(Theo mặc định) của mỗi file và thêm một dòng để hiển thị total của mỗi cột (Quan sát ví dụ bên trên)
+
+4. OPTION
+
+- `-l`: Chỉ hiển thị số lượng lines (Dòng) và tên của file được chỉ định
+
+```ubuntu
+With one file name
+$ wc -l state.txt
+5 state.txt
+
+With more than one file name
+$ wc -l state.txt capital.txt
+  5 state.txt
+  5 capital.txt
+ 10 total
+```
+
+- `-w`: Chỉ hiển thị số lượng từ và file name (Ví dụ giống bên trên)
+- `-c`: Chỉ hiển thị số lượng bytes và file name (Ví dụ giống bên trên)
+- `-m`: hiển thị số lượng kí tự và filename
+- `-L`: Nó được sử dụng để hiển thị số lượng kí tự của dòng dài nhất
+
+- Câu hỏi: Tại sao khi sử dụng `wc` nó lại đếm nhiều hơn một kí tự?
+
+  - REP: Đây không phải vấn đề của `wc` mà là vấn đề của `echo`, khi ta tạo nội dung cho file bằng cách sử dụng `echo` thì nó sẽ tự động thêm kí tự `\n` ở cuối dòng => Khi sử dụng `wc` nó sẽ đếm luôn cả kí tự này nữa
+  - Để chặn dòng mới ở cuối có thể dùng option `-n` của `echo`: `$echo -n "santhosh" | wc -c`
+
+- `ls -l | grep drw | wc -l`: Đếm số lượng thư mục
+
+### Compare Files (diff and cmp)
+
+1. OVERVIEW
+
+- The differcene between the byte and character
+
+  - Theo quy ước của POSIX định nghĩa 1 byte = 8 bit (1 bit là một chữ số nhị phân 0 hoặc 1)
+  - Một character thường là một byte, tuy nhiên khi sử dụng UTF8 hoặc UTF-16 thì một kí tự có nhiều hơn 1 byte đó (VD chữ tiếng việt `á`)
+
+- `diff`: So sánh từng dòng
+- `cmp`: So sánh từng byte
+
+- Đối với `diff` điều quan trọng cần nhớ là khác biệt sử dụng một số kí hiệu và hướng dẫn cần thiết để làm cho hai tệp giống nhau, nó hướng dẫn cho bạn cách thay đổi tệp đầu tiên để khớp với tệp thứ 2
+
+- Special symbols are:
+  - a : add
+  - c : change
+  - d : delete
+
+2. EX
+
+- SYNTAX: `diff [options] File1 File2`
+
+![diff](./imgs//ouput-wc.jpg)
+
+- Đầu ra trên có ý nghĩa gì?
+
+  - Dòng đầu tiên của đầu ra là Số dòng tương ứng với tệp đầu tiên, Special Symbol `a` và Số dòng tương ứng với tệp thứ 2
+  - `0a1`: được hiểu là sau dòng đầu tiên (Ở đầu tệp) bạn phải thêm `Tamil Nadu` để khớp với tệp thứ 2 dòng thứ 1
+  - Các dòng được đứng trước bởi kí tự `<` là các dòng từ tệp đầu tiên
+  - Các dòng được đứng trước bởi kí tự `>` là các dòng từ tệp thứ 2
+  - Dòng tiếp theo chứa `2,3c3` có nghĩa là từ dòng thứ 2 đến dòng thứ 3 của file đầu tiên cần được thay đổi để khớp với dòng số 3 trong tệp thứ 2. Sau đó nó cho chúng ta biết những dòng có kí hiệu trên
+  - Ba dấu gạch ngang `---` đơn thuần chỉ là ngăn cách dòng của file 1 và file 2
+
+- Tóm tắt lại: Để làm 2 file trên giống nhau thì ta cần thêm `Tamil Nadu` vào đầu của file thứ nhất để match với dòng thứ nhất của file thứ 2. Sau đó thay đổi dòng thứ 2 và 3 của file đầu tiên là `Uttar Pradesh` và `Kolkata` với dòng thứ 3 của file thứ 2 là `Andhra Pradesh`. Sau đó thay đổi dòng 5 của file thứ nhất là `Jammu and Kashmir` với dòng 5 của file thứ 2 là `Uttar Pradesh`
+
+3. OPTIONS
+
+- Hệ thống linux cung cấp 2 cách khác nhau để xem sự khác nhau giữa hai file là `context mode` và `unified mode`
+
+I. `-c (context)`
+
+```ubuntu
+$ cat file1.txt
+cat
+mv
+comm
+cp
+
+$ cat file2.txt
+cat
+cp
+diff
+comm
+
+$ diff -c file1.txt file2.txt
+*** file1.txt   Thu Jan 11 08:52:37 2018
+--- file2.txt   Thu Jan 11 08:53:01 2018
+***************
+*** 1,4 ****
+  cat
+- mv
+- comm
+  cp
+--- 1,4 ----
+  cat
+  cp
++ diff
++ comm
+```
+
+- Hai dòng đầu tiên của kết quả trên hiển thị thông tin về tệp 1 và tệp 2, nó hiển thị ngày sửa đổi và thời gian sửa đổi mỗi tệp một dòng
+- Dòng tiếp theo có 3 dấu hoa thị, theo sau là một phạm vi dòng từ đầu tệp đến dòng thứ 4 được phân tách bằng dấu `,`. Sau đó là 4 dấu `*`. Sau đó nó hiển thị nội dung của tệp đầu tiên với các tiêu chí báo sau:
+
+1. Nếu dòng không cần được sửa đổi nó sẽ bắt đầu với hai khoảng trắng
+2. Nếu dòng cần được sửa đổi nó sẽ được bắt đầu bằng một kí hiệu và một khoảng trắng. Ý nghĩa kí hiệu như sau:
+   a. `+` Nó chỉ ra một dòng trong tệp thứ 2 cần được thêm vào tệp đầu tiên làm cho chúng giống hệt nhau
+
+b. `-` Nó chỉ ra một dòng trong tệp thứ nhất cần được xóa làm cho chúng giống hệt nhau. Sau đó có ba dấu gạch ngang `---` theo sau là một phạm vi từ dòng tệp thứ hai (Trong trường hợp này là từ 1 - 4). Tiếp đến là 4 dấu gạch ngang `----`. Nó sẽ hiển thị nội dung của tệp thứ 2.
+
+II. -u (unified): Để xem sự khác nhau trong chế độ unified. Sử dụng `-u` option. Nó gần giống với `context mode` nhưng không hiển thị bất kì thông tin dư thừa nào hoặc nó hiển thị thông tin ở dạng ngắn gọn
+
+```ubuntu
+$ cat file1.txt
+cat
+mv
+comm
+cp
+
+$ cat file2.txt
+cat
+cp
+diff
+comm
+
+$ diff -u file1.txt file2.txt
+--- file1.txt   2018-01-11 10:39:38.237464052 +0000
++++ file2.txt   2018-01-11 10:40:00.323423021 +0000
+@@ -1,4 +1,4 @@
+ cat
+-mv
+-comm
+ cp
++diff
++comm
+```
+
+- Theo mặc định thì `diff command` phân biệt chữ hoa, chữ thường. Để làm cho nó không phân biệt chữ hoa chữ thường sử dụng `-i`
+
+```ubuntu
+$ cat file1.txt
+dog
+mv
+CP
+comm
+
+$ cat file2.txt
+DOG
+cp
+diff
+comm
+
+Without using this option:
+$ diff file1.txt file2.txt
+1,3c1,3
+< dog
+< mv
+ DOG
+> cp
+> diff
+
+Using this option:
+$ diff -i file1.txt file2.txt
+2d1
+ diff
+```
+
+### Compress and uncompress (tar, gzip, gunzip) (Nén và giải nén)
+
+I. `tar`
+
+1. OVERVIEW
+
+- Trong linux, `tar` được hiểu là tape archive (Băng lưu trữ). Được sử dụng để tạo `Archive` và `extract` các `Archive file`
+- Lệnh `tar` trong linux là một trong những lệnh quan trọng cung cấp chức năng lưu trữ trong linux. Chúng ta có thể sử dụng `tar` của Linux để tạo các tệp lưu trữ được nén hoặc không ném, đồng thời duy trì và sửa đổi nó
+
+2. SYNTAX
+
+- `tar [options] [archive-file] [file or directory to be archived]`
+
+Options:
+-c : Creates Archive (Tạo kho lưu trữ)
+-x : Extract the archive (Trích xuất kho lưu trữ)
+-f : creates archive with given filename (Tạo lưu trữ với tệp đã cho )
+-t : displays or lists files in archived file (Hiển thị hoặc liệt kê các tệp trong kho lưu trữ)
+-u : archives and adds to an existing archive file (Lưu trữ và thêm các file lưu trữ hiện có)
+-v : Displays Verbose Information (Hiển thị thông tin Verbose)
+-A : Concatenates the archive files (Nối các tập tin lưu trữ)
+-z : zip, tells tar command that creates tar file using gzip
+-j : filter archive tar file using tbzip
+-W : Verify a archive file
+-r : update or add file or directory in already existed .tar file
+
+- What is an Archive file?
+  - `An Archive file` là một tệp bao gồm một hoặc nhiều tệp với siêu dữ liệu.
+  - `Archive files` được sử dụng để gom nhóm các tệp dữ liệu với nhau thành một tệp duy nhất để dễ dàng di chuyển và lưu trữ hơn hoặc đơn giản là để nén tệp với mục đích sử dụng ít lưu trữ hơn.
+
+3. EX
+
+a/ Creating an uncompressed tar Archive using option -cvf (Tạo kho lưu trữ tar không nén)
+
+- Lệnh này tạo ra một tệp `tar` có tên là `file.tar` đây là file lưu trữ tất cả các tệp có đuôi là `.c` trong thư mục hiện tại
+
+```ubuntu
+$ tar cvf file.tar *.c
+
+OUPUT:
+os2.c
+os3.c
+os4.c
+```
+
+b/ Extracting files from Archive using option `-xvf` : This command extracts files from Archives.
+
+```ubuntu
+$ tar xvf file.tar
+
+Output :
+os2.c
+os3.c
+os4.c
+```
+
+c/ gzip compression on the tar Archive, using option -z
+
+- Lệnh này tạo một tệp `tar` có tên là `file.tar.gz` Đây là kho lưu trữ của các tệp `.c`
+- `$ tar cvzf file.tar.gz *.c`
+
+d/ Extracting a gzip tar Archive \*.tar.gz using option -xvzf
+
+- Lệnh này sử dụng để giải nén các file từ kho lưu trữ tar: file.tar.gz
+- `$ tar xvzf file.tar.gz`
+
+e/ Creating compressed tar archive file in Linux using option -j
+
+- Lệnh này nén và tạo tệp lưu trữ nhỏ hơn kích thước của gzip. Tuy nhiên cả nén và giải nén mất nhiều thời gian hơn gzip
+
+```ubuntu
+$tar cvfj file.tar.tbz example.cpp
+example.cpp
+$tar tvf file.tar.tbz
+-rwxrwxrwx root/root        94 2017-09-17 02:47 example.cpp
+```
+
+f/ Untar single tar file or specified directory in Linux
+
+- Lệnh này sẽ untar một tệp trong thư mục hiện tại hoặc trong một thư mục được chỉ định bằng tùy chọn `-c`
+
+- `$ tar xvfj file.tar ` OR `$ tar xvfj file.tar -C path of file in directory`
+
+ĐỌC THÊM TÀI LIỆU
