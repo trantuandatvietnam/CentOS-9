@@ -1562,3 +1562,214 @@ f/ Untar single tar file or specified directory in Linux
 - `$ tar xvfj file.tar ` OR `$ tar xvfj file.tar -C path of file in directory`
 
 ĐỌC THÊM TÀI LIỆU
+
+### Truncate File Size (truncate)
+
+1. OVERVIEW
+
+- Lệnh này thường được sử dụng để thu nhỏ hoặc mở rộng kích thước của file đến một kích thước được chỉ định
+- Lưu ý: Lệnh này không giống như nén hoặc giải nén, mà nó thực sự làm mất dữ liệu khi thực hiện
+
+2. SYNTAX
+
+- `truncate -s size_number file`
+  - `size_number` chính là kích thước mà mình muốn tăng hoặc giảm
+  - Nếu giảm size so với kích thước hiện tại thì file sẽ được giảm kích thước bằng cách xóa đi một phần nội dung của file
+  - Nếu tăng size so với kích thước hiện tại thì file sẽ được tăng kích thước bằng cách thêm một phần kí tự vào file
+
+### Combining and Splitting Files (Kết hợp và chia nhỏ tệp)
+
+- Ví dụ: `split -l 2 countries sep`
+  - Lệnh trên được hiểu là phân tách file có tên là countries (2 dòng một) vào các file có tên bắt đầu bằng `sep`
+
+### Vi
+
+- `Vi` (visual editor) có mặt hầu hết trong hệ thống UNIX. Sử dụng `vi` để edit một tệp sẵn có hoặc tạo và thêm nội dung cho tệp đó từ đầu
+- Để sử dụng `vi` gõ: `vi file`
+
+- Có 3 chế độ hoạt động trong `vi`
+
+  - Command Mode: Khi `vi` được mở, nó bắt đầu ở `Command mode`. Trong chế độ này `vi` diễn giải bất kì kí tự nào mà chúng ta nhập dưới dạng lệnh => Do đó nó không hiển thị lên màn hình. Ở chế độ này chúng ta có thể di chuyển, xóa hoặc dán một văn bản. Để vào `Command mode` từ bất kì chế độ nào khác ta sử dụng `Esc`. Nếu chúng ta sử dụng phím này khi đang ở `Command mode` thì nó sẽ xảy ra tiếng bip hoặc nhấp nháy màn hình
+  - Insert mode: Ở chế độ này chúng ta có thể chèn dữ liệu vào văn bản, mọi thứ ta viết trong chế độ này đều được hiển thị trong văn bản được mở. `Vi` thường bắt đầu bằng `Command mode`, để vào `Insert mode` ta sử dụng `i`. Để thoát khỏi chế độ này nhấn `Esc`
+  - Last Line Mode(Escape Mode): Line Mode được gọi bằng cách nhập dấu `:` khi `vi` đang ở chế độ `commnad mode`. Con trỏ sẽ nhảy tới dòng cuối cùng và nó sẽ chờ lệnh. Sử dụng chế độ này khi thực hiện nhiệm vụ lưu file, thực thi lệnh
+
+- Commands and their Description
+
+  - vi filename: Creates a new file if it already not exist, otherwise opens existing file.
+  - vi -R filename : Opens an existing file in read only mode.
+  - view filename : Opens an existing file in read only mode.
+
+- Moving within a File(Navigation): Để di chuyển trong tệp thì bạn phải ở chế độ `Command mode` (Nhấn Esc hai lần)
+  - `k`: Di chuyển con trỏ lên một dòng
+  - `j`: Di chuyển con trỏ xuống một dòng
+  - `h`: Di chuyển con trỏ sang trái một kí tự
+  - `l`: Di chuyển con trỏ sang phải một kí tự
+  - `0 or |`: Định vị con trỏ ở đầu dòng
+  - `$`: Định vị con trỏ ở cuối dòng
+  - `W`: Định vị con trỏ tới từ tiếp theo
+  - `B`: Định vị con trỏ tới từ trước đó
+  - `(`: Định vị con trỏ đến đầu câu hiện tại
+  - `)`: Định vị con trỏ đến đầu câu tiếp theo
+  - `H`: Di chuyển đến top của màn hình
+  - `nH`: Di chuyển đến dòng thứ n từ đầu màn hình
+  - `M`: Di chuyển đến giữa màn hình
+  - `L`: Di chuyển xuống cuối cùng của màn hình
+  - `nL`: Di chuyển đến dòng thứ n từ cuối màn hình
+  - `dấu hai chấm và x (:x)`: Dấu hai chấm theo sau bởi một số sẽ định vị con trỏ trên số dòng được biểu thị bằng `x`
+- Control Commands(Scrolling)
+
+  - CTRL+d : Move forward 1/2 screen.
+  - CTRL+f : Move forward one full screen.
+  - CTRL+u : Move backward 1/2 screen.
+  - CTRL+b : Move backward one full screen.
+  - CTRL+e : Moves screen up one line.
+  - CTRL+y : Moves screen down one line.
+  - CTRL+u : Moves screen up 1/2 page.
+  - CTRL+d : Moves screen down 1/2 page.
+  - CTRL+b : Moves screen up one page.
+  - CTRL+f : Moves screen down one page.
+  - CTRL+I : Redraws screen.
+
+- Editing and inserting in Files(Entering and Replacing Text)
+
+  - i : Inserts text before current cursor location.
+  - I : Inserts text at beginning of current line.
+  - a : Inserts text after current cursor location.
+  - A : Inserts text at end of current line.
+  - o : Creates a new line for text entry below cursor location.
+  - O : Creates a new line for text entry above cursor location.
+  - r : Replace single character under the cursor with the next character typed.
+  - R : Replaces text from the cursor to right.
+  - s : Replaces single character under the cursor with any number of characters.
+  - S :Replaces entire line.
+
+- Tìm hiểu thêm
+
+### Difference between vi and vim Editors
+
+- Vi là trình soạn thảo văn bản phổ quát của Linux. Nếu bạn biết cách sử dụng trình soạn thảo văn bản Vi, bạn có thể chỉnh sửa bất kỳ tệp văn bản nào trên mọi chế độ và phiên bản Linux. Vim chỉ đơn giản là một phiên bản cải tiến của Vi, nhưng không giống như Vi, Vim không phổ biến . Tùy thuộc vào bản phân phối Linux của bạn, nó có thể được cài đặt hoặc không được cài đặt theo mặc định.
+
+### Sed command
+
+1. OVERVIEW
+
+- `Sed` là viết tắt của `stream editor` và nó có thể thực hiện nhiều chức năng trên tệp như tìm kiếm, thay thế chèn hoặc xóa. Mặc dù chức năng phổ biến nhất trên `seb` là thay thế hoặc tìm kiếm và thay thế. Với việc sử dụng `Seb`, bạn có thể chỉnh sửa file ngay cả khi không mở chúng. Đó là cách nhanh hơn nhiều để tìm kiếm và thay thế điều gì đó trong tệp so với việc phải mở file và tìm kiếm sau đó thay thế.
+
+- SYNTAX: `sed OPTIONS... [SCRIPT] [INPUTFILE...]`
+
+2. EX
+
+```ubuntu
+$cat > geekfile.txt
+OUPUT:
+unix is great os. unix is opensource. unix is free os.
+learn operating system.
+unix linux which one you choose.
+unix is easy to learn.unix is a multiuser os.Learn unix .unix is a powerful.
+```
+
+- `$sed 's/unix/linux/' geekfile.tx`: Ghi đè toàn bộ `unix` thành `linux`
+
+```ubuntu
+OUPUT:
+linux is great os. unix is opensource. unix is free os.
+learn operating system.
+linux linux which one you choose.
+linux is easy to learn.unix is a multiuser os.Learn unix .unix is a powerful.
+```
+
+- Ở đây `-s` được hiểu là `substituting` (Thay thế). `/` là dấu phân cách. Theo mặc định `seb` sẽ thay thế lần xuất hiện đầu tiên của mẫu trong mỗi dòng và nó sẽ không thay thế lần xuất hiện thứ hai thứ ba trong dòng.
+
+- Thay thế lần xuất hiện thứ n của mẫu trong dòng: Sử dụng flag /1 /2 để thay thế lần xuất hiện đầu tiên hoặc lần thứ hai của một mẫu trong một dòng. Lệnh dưới đây sẽ thay thế lần xuất hiện thứ hai của từ `unix` bằng `linux` trong một dòng
+
+- `$sed 's/unix/linux/2' geekfile.txt`
+
+```ubuntu
+unix is great os. linux is opensource. unix is free os.
+learn operating system.
+unix linux which one you choose.
+unix is easy to learn.linux is a multiuser os.Learn unix .unix is a powerful.
+```
+
+- Replace tất cả các lần xuất hiện của mẫu trong một dòng: Cờ thay thế `/g` (global replacement)
+  - `$sed 's/unix/linux/g' geekfile.txt`
+
+```ubuntu
+OUPUT
+linux is great os. linux is opensource. linux is free os.
+learn operating system.
+linux linux which one you choose.
+linux is easy to learn.linux is a multiuser os.Learn linux .linux is a powerful.
+```
+
+- Replace từ lần xuất hiện thứ n của một mẫu trong một dòng
+  - `$sed 's/unix/linux/3g' geekfile.txt`
+
+```ubuntu
+unix is great os. unix is opensource. linux is free os.
+learn operating system.
+unix linux which one you choose.
+unix is easy to learn.unix is a multiuser os.Learn linux .linux is a powerful.
+```
+
+- Replace chuỗi trên một dòng cụ thể
+  - `$sed '3 s/unix/linux/' geekfile.txt`
+
+```ubuntu
+unix is great os. unix is opensource. unix is free os.
+learn operating system.
+linux linux which one you choose.
+unix is easy to learn.unix is a multiuser os.Learn unix .unix is a powerful.
+```
+
+### User Account Management (useradd, groupadd, usermod, userdel, groupdel)
+
+- `useradd`: Thêm người dùng
+- `groupadd`: Thêm nhóm
+- `userdel`: Xóa người dùng
+- `groupdel`: Xóa nhóm
+- `usermod`: Chỉnh sửa người dùng
+
+- Những thông tin về người dùng được lưu trữ trong 3 tệp
+
+  - `/etc/passwd`
+  - `/etc/group`
+  - `/etc/shadow`
+
+- `useradd supperman`: Thêm người dùng mới có tên là `supperman`
+- Lưu ý:
+  - Khi tạo ra người dùng thì thư mục của người đó sẽ nằm trong `/home`
+  - Đồng thời nó cũng tạo ra một nhóm mới có tên trùng với `user_name` (Sử dụng `cat /etc/group` để kiểm tra)
+- Để kiểm tra người dùng: `id ten_user`
+- `groupadd supperheros`: Thêm nhóm mới có tên là `supperheros`
+- Để kiểm tra các nhóm đã tạo: `cat /etc/group`
+- `userdel supperman`: Xóa người dùng có tên là `supperman` (Tuy nhiên nó sẽ không xóa thư mục của người dùng trong `/home`)
+- Để xóa người dùng và toàn bộ thư mục của người dùng đó trong `/home`: `userdel -r user_name`
+- `usermod -G supperheros spiderman`: Thêm `spiderman` vào nhóm `supperheros`
+
+- `cat /etc/shadow`: Xem thông tin về toàn bộ mật khẩu
+
+- Ví dụ bao gồm tất cả các thuộc tính tạo người dùng: `useradd -g supperheros -s /bin/bash -c "user description" -m -d /home/spiderman spiderman`
+- Khi tạo người dùng mới thì phải tạo mật khẩu cho người dùng đó trước khi thực hiện đăng nhập với người dùng mới(Với tư cách không phải root)
+- Để tạo password: `passwd user_name` sau đó nhập mật khẩu
+
+### Enable Password Aging
+
+- Xem các ràng buộc về tài khoản: `cat /etc/login.defs`
+- The change command -peruser
+
+- EX:
+  - `change [-d lastday] [-m mindays] [-M maxdays] [-W warndays] [-I inactive] [-E expriredate] user`
+    - `-d = 3`: Last password change (Lastchanged): Days since Jan 1, 1970
+    - `-m = 4`: Minumum: The minimum number of days, required between password changes i.e. the number of days left before the user is allowed to changed his/her password
+    - `-M = 5`: Maxium: The maximum number of days the password is valid (After that user if forced to change his/her password)
+    - `-W = 6`: Warn: The number of days before password is exprie that user is warned that his/her password must be changed
+    - `-I = 7`: Inactive: The number of days after password expries that account is disabled
+    - `-E = 8`: Expire: Days since Jan 1, 1970 that account is disabled i.e. an absolute data specifying when the login may no longer be used
+
+### Switch Users and Sudo Access (su, sudo)
+
+- Để chuyển sang người dùng khác sử dụng lệnh `su - username`
+- `sudo command`: Sử dụng khi cần đặc quyền của `root`
+- Khi bạn cài đặt hệ điều hành Linux như Ubuntu 22.04, nó sẽ tự động thêm người dùng đầu tiên vào tệp sudoer với quyền quản trị. Người dùng đầu tiên có thể chạy các lệnh như cài đặt, cập nhật, v.v. bằng lệnh “sudo” sau khi quá trình cài đặt Ubuntu hoàn tất. Tuy nhiên, khi một người dùng mới được thêm vào theo mặc định, không có quyền quản trị nào được gán cho người dùng đó. Để cấp quyền quản trị hoặc quyền truy cập siêu người dùng cho người dùng mới, tệp sudoer cần được chỉnh sửa và người dùng mới cần được thêm vào tệp sudoer.
+- Những người dùng bình thường được tạo ra sẽ không thể nào có quyền như root khi sử dụng sudo (Để có được tính năng này ở người dùng bình thường thì cần chỉnh sửa đặc quyền của người đó trong tệp sudoer, Để chỉnh sửa tệp này một cách an toàn cần sử dụng lệnh `visudo` và ghi ALL cho nó bên dưới dòng root dạng `user_name ALL=(ALL) ALL`)
