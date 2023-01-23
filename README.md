@@ -1773,3 +1773,70 @@ unix is easy to learn.unix is a multiuser os.Learn unix .unix is a powerful.
 - `sudo command`: Sử dụng khi cần đặc quyền của `root`
 - Khi bạn cài đặt hệ điều hành Linux như Ubuntu 22.04, nó sẽ tự động thêm người dùng đầu tiên vào tệp sudoer với quyền quản trị. Người dùng đầu tiên có thể chạy các lệnh như cài đặt, cập nhật, v.v. bằng lệnh “sudo” sau khi quá trình cài đặt Ubuntu hoàn tất. Tuy nhiên, khi một người dùng mới được thêm vào theo mặc định, không có quyền quản trị nào được gán cho người dùng đó. Để cấp quyền quản trị hoặc quyền truy cập siêu người dùng cho người dùng mới, tệp sudoer cần được chỉnh sửa và người dùng mới cần được thêm vào tệp sudoer.
 - Những người dùng bình thường được tạo ra sẽ không thể nào có quyền như root khi sử dụng sudo (Để có được tính năng này ở người dùng bình thường thì cần chỉnh sửa đặc quyền của người đó trong tệp sudoer, Để chỉnh sửa tệp này một cách an toàn cần sử dụng lệnh `visudo` và ghi ALL cho nó bên dưới dòng root dạng `user_name ALL=(ALL) ALL`)
+
+### Monitor Users (who, last, w, id)
+
+- Một số lệnh giúp Monitor users (Giám sát người dùng)
+
+  - `who`
+  - `last`
+  - `w`
+  - `finger`
+  - `id`
+
+- Lệnh `who`: Kiểm tra xem những người nào đã đăng nhập vào hệ thống
+  - Giả sử ta đăng nhập vào hệ thống từ máy window thông qua putty bằng tài khoản `dat` như sau:
+
+![who](./imgs/who.jpg)
+
+- Sau đó vào máy chủ Linux thực hiện bằng lệnh `who` cho ra kết quả như sau:
+
+![who2](./imgs/who2.jpg)
+
+- Lệnh `last`: Hiển thị mọi người dùng đã đăng nhập từ trước tới nay theo thứ tự đăng nhập từ dưới lên
+
+![last](./imgs/last.jpg)
+
+- Lệnh `w`: Giống lệnh `who` nhưng hiển thị ít thông tin hơn
+
+- Lệnh `finger`: Để chạy được lệnh này cần cài đặt như sau: `yum install finger -y` (Nếu sử dụng CentOS > 8 thì thay `finger` thành `pinky`)
+
+  - Nếu pinky có sẵn rồi thì không cần cài đặt
+  - Lệnh này theo dõi người dùng đến từ đâu, loại giao thức nào đang được sử dụng
+
+- Lệnh `id user_name`: Xem thông tin về người dùng cụ thể
+
+### Talking to Users (users, wall, write)
+
+1. Lệnh `users`
+
+- Được sử dụng để hiển thị tên của người dùng đang đăng nhập vào máy chủ hiện tại
+
+2. Lệnh `wall`
+
+- Lệnh này được sử dụng để tạo ra một messge cho tất cả các users
+- Lệnh này hiển thị một message, nội dung của một file, hoặc bất kì đầu vào tiêu chuẩn nào trên các thiết bị đầu cuối mà người dùng đăng nhập
+- Chỉ supperUser mới có thể sử dụng lệnh này
+
+- VD:
+- Để thực hiện ví dụ này, trước tiên cần đăng nhập vào root, sau đó sử dụng putty để đăng nhập một user khác, sau đó tại máy chủ (Với tư cách root): Thực hiện `wall Thong bao, he thong se tu dong khoi dong lai sau 10p`
+
+3. Lệnh `write`
+
+- Lệnh này cho phép bạn viết tin nhắn đến một user cụ thể:
+- Để sử dụng lệnh này ta cần sử dụng cú pháp sau: `write username` + Enter. Sau đó viết tin nhắn, khi viết tin nhắn xong bấm enter thì tin nhắn sẽ được gửi
+
+### Linux Directory Service - Account Authentication
+
+- Các loại tài khoản người dùng
+  - local accounts: Là các tài khoản được tạo bằng cách sử dụng lệnh `useradd`
+  - domain/directory accounts
+- Trong hệ thống Window, để quản lý tài khoản người dùng họ thường sử dụng thêm directory services hoặc directory server
+- Trong linux có `LDAP`, đây là một giao thức chứ không phải một `Directory`
+
+### System Utility Commands (date, uptime, hostname, uname, which, cal, bc)
+
+- `date`
+- `uptime`
+- `hostname`
+- `uname`
