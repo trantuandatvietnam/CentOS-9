@@ -1836,7 +1836,422 @@ unix is easy to learn.unix is a multiuser os.Learn unix .unix is a powerful.
 
 ### System Utility Commands (date, uptime, hostname, uname, which, cal, bc)
 
-- `date`
-- `uptime`
-- `hostname`
-- `uname`
+- `date`: Hiển thị ngày hiện tại
+- `uptime`: Cho biết hệ thống được chạy trong bao lâu, và số người dùng đã đăng nhập vào hệ thống
+- `hostname`: Cho biết tên máy chủ
+- `uname`: Loại máy chủ (Linux)
+  - `uname -a`: Hiển thị một cách chi tiết hơn
+- `which command_name`: cho biết command đó nằm ở trong tệp nào
+- `cal`: Hiển thị lịch
+  - `cal year` (`year` năm cụ thể) sẽ hiển thị lịch của năm đó, có thể truyền vào `tháng năm`
+- `bc`: Mở công cụ tính toán: sau khi thực hiện câu lệnh => Nhập phép tính và bấm `enter`
+
+### Giải đáp ý nghĩa của một số thuật ngữ
+
+- Application = Service
+- Script: Một tệp các lệnh được đóng gói trong một file
+- Process: Quy trình được liên kết với một ứng dụng nào đó
+- Damon: Nó cũng là một process, nhưng nó được chạy ngầm (Hoặc không dừng lại)
+- Thread: Luồng chạy của một ứng dụng
+- Job: Các công việc
+- systemctl or service
+- ps: Hiển thị các tiến trình đang chạy
+- top: Các tiến trình đang chạy trong hệ thống của bạn
+- kill: Xóa hoặc dừng một tiến trình
+- crontab: lên lịch chạy một ứng dụng nào đó
+
+### systemctl command (System control)
+
+- Được sử dụng để start một ứng dụng
+- Cú pháp:
+  - `systemctl start|stop|status servicename.service`
+  - `systemctl enable servicename.service`
+  - `systemctl restart|reload servicename.service`
+  - `systemctl list-units --all`: Hiển thị toàn bộ service
+  - `systemctl list-units`: Hiển thị toàn bộ service đang dược bật
+- Ví dụ: `systemctl status firewalld.service`
+
+- Để điều khiển system với systemctl:
+  - `systemctl poweroff`
+  - `systemctl halt`
+  - `systemctl reboot`
+
+### ps (process status)
+
+- `ps`: Hiển thị các tiến trình của current shell (Mở shell khác thì tiến trình ở shell kia không hiển thị đâu nhé)
+  - `PID`: The unique process ID
+  - `TIY`: Terminal type mà user login
+  - `TIME`: Số lượng CPU trong phút và giây khi tiến trình chạy
+- `ps -e`: Hiển thị toàn bộ tiến trình
+- `ps aux`: Hiển thị toàn bộ tiến trình đang chạy ở định dạng BSD
+- `ps -ef`: Hiển thị toàn bộ tiến trình ở định dạng đầy đủ
+- `ps -u username`: Hiển thị toàn bộ tiến trình theo người dùng
+
+### top command
+
+- Hiển thị các tiến trình trong linux và nó cung cấp một cách real-time
+- Lệnh này hiển thị các thông tin chung của hệ thống và danh sách lại những processes hoặc threads được quản lý bởi Linux kernel
+- Để thoát nhấn phím `q`
+- `top -n 10`: Tự động thoát real-time khi refresh 10 lần
+- `top -u username`: Hiển thị tiến trình của người dùng cụ thể
+
+### kill command
+
+- được sử dụng để chấm dứt các quy trình theo cách thủ công.
+- `kill -l`: Hiển thị các tín hiệu sẵn có
+
+- Cú pháp: `kill [OPTION] [PID]`
+
+  - [OPTION]: Signal name or signal number / ID
+  - [PID]: Process ID
+
+- `kill PID PID`: Kill một tiến trình với default signal
+- `kill -1 PID`: Restart
+- `kill -2 PID`: Thực hiện lệnh này giống như việc thực hiện ctr C
+- `kill -9 PID`: kill tiến trình (force)
+- `kill -15 PID`: kill một tiến trình (Gracefully)
+- `killall`: kill toàn bộ tiến trình, tiến trình liên quan hoặc các tiến trình con
+- `pkill PName`: Cho phép xóa một tiến trình theo tên
+
+### crontab command
+
+- được sử dụng để lên lịch trình
+- `crontab -e`: Chỉnh sửa crontab
+- `crontab -l`: List the crontab entries
+- `crontab -r`: remove the crontab
+- `crond`: crontab deamon/ service that managers scheduling
+- `systemctl status crond`: (Thực hiện kiểm tra phải running thì mới lên lịch được bạn nhé)
+- Định dạng thời gian lập lịch
+
+  - Cột 1 minute: 0 - 59
+  - Cột 2 hour: 0 - 23
+  - Cột 3 day of the month: 1 - 31
+  - Cột 4 month: 1 - 12
+  - Cột 5 day of the week (0 - 6):
+  - Cột 6: command to excute
+
+- Ví dụ:
+
+  - Thực hiện câu lệnh `crontab -e` sau đó chỉnh sửa dòng đầu tiên như sau: `21 16 * 10 * echo "Hello world" > test.txt`
+
+  => Câu lệnh trên thực hiện nhiệm vụ lên lịch vào đúng 10 giờ 21 phút hằng ngày trong tháng 10 mọi ngày trong tuần sẽ thực hiện câu lệnh trên
+
+- Để xóa crontab thì thực hiện những câu lệnh đã note bên trên
+
+### at command
+
+- Lệnh này có tác dụng giống như `crontab`, tuy nhiên cũng có một số điểm khác biệt: và điểm khác biệt lớn nhất đó là `at command` chỉ thực hiện công việc chỉ một lần duy nhất
+- Lệnh `at command` có thể thực thi bất kì chương trình hoặc thư nào tại một thời điểm trong tương lai. Nó thực thi lệnh tại một thời điểm cụ thể và chấp nhận thời gian có dạng `HH:MM` để chạy một công việc vào một thời gian cụ thể trong ngày
+- Cụm từ như `noon, midnight, teatime, tomorrow, next week, next Monday, etc` có thể được chỉ định trong lệnh `at command`
+- SYNTAX: `at [OPTION...] runtime`
+- Update: `sudo yum install at`
+- `at -l hoặc atq`: Hiển thị danh sách các công việc đang chờ thực hiện
+
+2. EX
+
+- Lên lịch cho công việc vào thứ 2 tới tại thời điểm chậm hơn 20p so với thời gian hiện tại: `at Monday +20 minutes`
+- Lên lịch tại 1h45p ngày 12 tháng 8 năm 2020 : `at 1:45 081220`
+- Lên lịch chạy lúc 3h chiều sau 4 ngày nữa kể từ bây giờ: `at 3pm + 4 days`
+
+NOTE: Khi thực hiện các lệnh đặt thời gian bên trên, nó sẽ hiển thị một dòng `at...`, khi viết xong mỗi câu lệnh thì bấm `enter`. Để kết thúc nhập thì bấm `Ctr + D`
+
+- `echo "shutdown -h now" | at -m 4:30`: Lên lịch shutdown máy tại 4h:30p trong ngày
+- `at now +5 hours`: lên lịch cho thời điểm 5h nữa kể từ bây giờ
+
+- `at -r 11 hoặc atrm 11`: THực hiện xóa công việc có id 11 (Sử dụng `at -l` để xem `id`)
+
+### Additional cronjobs (hourly, daily, weekly, monthly)
+
+- Thực hiện xử lý các tác vụ lặp đi lặp lại ở lần sau:
+
+  - Giả sử ứng dụng của bạn có chức năng lưu tạm file, vậy mỗi lần người dùng lưu tạm miết vậy và không dùng, đến một lúc nào đó nó sẽ đầy và tốn dùng lượng. Lúc này bạn cần một công việc tự động là 3 ngày nó sẽ dọn các file tạm đó đi. Do đó, đối với các công việc định kì, lặp đi lặp lại thì cron là giải pháp hoàn hảo.
+  - Cron là một daemon, nghĩa là nó hoạt động dưới nền để thực thi những tác vụ không cần tương tác
+
+- Có 4 loại cronjobs theo mặc định:
+
+  - hourly: Từng giờ
+  - daily: Từng ngày
+  - weekly: Hàng tuần
+  - monthly: Hàng tháng
+
+- Có thể setup tại: `/etc/cron.__(directory)`
+- Syntax: bao gồm 2 phần chính là schedule và command: `* * * * * /bin/sh clear.sh`
+
+  - `* * * * * `: là thời gian, chúng ta sẽ tìm hiểu ý nghĩa của nó ở phần dưới (Một số đã học ở phần trước rồi)
+  - `/bin/sh clear.sh` : là chạy file sh clear.sh
+
+- Ngoài ra còn một số cách viết:
+
+  - Dấu hoa thị (\*) – để xác định tất cả tham số được lên lịch
+  - Dấu phẩy (,) – để duy trì 2 hoặc nhiều lần thực thi một lệnh
+  - Dấu gạch nối (-) – để xác định khoảng thời gian thiết lập lần thực thi một lệnh
+  - Dấu gạch chéo (/) – để tạo khoảng thời gian nghỉ cụ thể
+  - Cuối cùng (L) – cho mục đích cụ thể là chỉ định ngày cuối cùng của tuần trong tháng. Ví dụ, 3L nghĩa là thứ tư cuối cùng.
+  - Ngày trong tuần (W) – để xác định ngày trong tuần gần nhất. Ví dụ, 1W nghĩa là nếu ngày 1 là thứ 7, lệnh sẽ chạy vào thứ hai (ngày 3)
+  - **Hash (#) **– để xác định ngày của tuần, theo sau bởi số chạy từ 1 đến 5. Ví dụ, 1#2 nghĩa là ngày thứ Hai thứ hai.
+  - Dấu chấm hỏi (?) – để để lại khoảng trống
+
+- EX:
+
+```ubuntu
+#Chạy vào lúc 3 giờ hàng ngày
+0 3 * * *  /script/clean.sh
+#Chạy vào lúc 17h ngày chủ nhật hàng tuần
+0 17 * * sun /scripts/clean.sh
+#Cứ 8 tiếng là chạy
+0 */8 * * * /scripts/clean.sh
+#Cứ 30 phút chạy một lần
+*/30 * * * * /script/clean.sh
+# Cứ 5 phút lúc 5AM, bắt đầu lúc 5:10 AM.
+10-59/5 5 * * *  /script/clean.sh
+# Cứ chạy vào tháng 1,2,5 mỗi năm
+* * * 1,2,5 *  /script/clean.sh
+# Cứ chạy vào ngày đầu tiên của tháng
+0 0 1 * *   /script/clean.sh
+```
+
+### Process Management (bg, fg, nice)
+
+1. jobs
+
+- Giả sử bạn đăng nhập máy ảo từ putty sau đó thực hiện lệnh `sleep 100` rồi bấm `Ctr + Z` => Tiến trình sẽ bị dừng (gõ lệnh kiểm tra `jobs`)
+- Để chạy công việc trong `jobs` ở chế độ nền cần thực hiện gõ: `bg`
+- Để chạy công việc đang chạy trên `bg` tại terminal: `fg`
+
+2. nohup
+
+- Giả sử bạn đăng nhập máy ảo từ putty sau đó thực hiện lệnh `sleep 100` sau đó đóng luôn putty thì tiến trình này sẽ tự động bị hủy bỏ
+
+=> Để chạy lệnh cho dù đóng thiết bị đầu cuối: `nohup process &`
+
+- EX: `nohup sleep 100 &`: Tuy nhiên khi chạy lệnh này sẽ xuất ra màn hình một thông báo, nó sẽ tạo một file tên là `nohup.out` để lưu trữ toàn bộ thông báo (`ls -ltr`)
+  - `nohup sleep 100 ? /dev/null/ 2>&1 &`: Nó sẽ không hiển thị thông báo ra màn hình nữa mà nó sẽ gửi toàn bộ thông báo này đến `/dev/null`
+
+3. nice
+
+- Thực hiện một công việc kèm theo độ ưu tiên: (Từ -20 đến 19: Giá trị càng thấp độ ưu tiên càng cao): VD: `nice -n -20 sleep 5`
+
+### System Monitoring Commands (df, dmesg, iostat 1, netstat, free, top)
+
+1. `top command`
+
+- Lệnh này được sử dụng để hiển thị các tiến trình của linux
+- Nó cung cấp chế độ xem realtime của tiến trình đang chạy trên hệ thống
+- Thông thường, lệnh này hiển thị thông tin tóm tắt của hệ thống và danh sách các quy trình hoặc luồng hiện đang được Linux Kernel quản lý.
+- Khi chạy lệnh này thì nó sẽ hiển thị nhũng thứ sau:
+
+  - Nửa trên chứa số liệu thống kê về quy trình và sử dụng tài nguyên
+  - Nửa dưới chứa một danh sách các tiến trình đang chạy
+  - Để thoát khỏi chế độ này sử dụng phím `q`
+
+- `PID`: Hiển thị ID quy trình của dịch vụ
+- `PR`: Độ ưu tiên. Số càng thấp ưu tiên càng cao
+- `VIRT`: Tổng bộ nhớ ảo được sử dụng bởi tác vụ
+- `USER`: Tên người dùng của chủ sở hữu task
+- `%CPU`: Đại diện cho việc sử dụng CPU
+- `TIME+`: Thời gian CPU, giống như Time nhưng phản ánh mức độ chi tiết cao hơn thông qua phầm trăm giây
+- `SHR`: Biểu thị kích thước dùng chung (kb) được sử dụng bởi tác vụ
+- `NI`: Đại diện cho NICE VALUE của một tác vụ. Giá trị âm nghĩa là mức độ ưu tiên cao hơn, giá trị âm nghĩa là mức độ ưu tiên thấp hơn
+- `%MEM`: Hiển thị mức sử dụng bộ nhớ của tác vụ
+- `RES`: Hiển thị lượng ram vật lý mà quá trình sử dụng, được đo bằng kilobytes
+- `COMMAND`: Tên của lệnh được sử dụng
+
+2. `df command`
+
+- Là viết tắt của `disk free`
+- Được sử dụng để hiển thị thông tin liên quan đến `file system` về tổng dung lượng và dung lượng khả dụng
+- SYNTAX: `df [OPTION]... [FILE]...`
+
+  - Nếu không có tên được cung cấp, nó sẽ hiển thị không gian có sẵn trên các hệ thống tệp được mount
+  - Nếu có tên file được chỉ định nó sẽ hiển thị toàn bộ thông tin của tệp cụ thể đó
+
+  ```ubuntu
+  df /home/mandeep/test/test.cpp
+  OUPUT:
+  Filesystem     1K-blocks     Used Available Use% Mounted on
+  /dev/sda10      78873504 67528220   7315640  91% /home
+  ```
+
+- Hiển thị thông tin của toàn bộ hệ thống tệp: `df -a`
+
+- HIển thị thông tin của toàn bộ hệ thống tệp / hoặc tệp cụ thể (nếu được chỉ định) theo đơn vị 1024: `df -h`
+- HIển thị thông tin của toàn bộ hệ thống tệp / hoặc tệp cụ thể (nếu được chỉ định) theo đơn vị 1000: `df -H`
+- Hiển thị tổng dung lượng đang sử dụng: `df --total`
+- Để hiển thị loại tệp sử dụng: `df -T`
+
+3. `dmesg command`
+
+- là viết tắt của `driver message` hoặc `display message`, được sử dụng để kiểm tra `kernel ring buffer` và in `message buffer of kernel`. Đầu ra của lệnh này chứa các thông báo do trình điều khiển thiết bị tạo ra
+- Cách sử dụng `dmesg`
+
+  - Khi máy tính được khởi động, có rất nhiều mã thông báo được tạo ra, để có thể đọc được tát cả các mã thông báo này chúng ta sử dụng `dmesg command`, Nội dung của `kernel ring buffer` cũng được lưu trữ trong file `/var/log/dmesg`
+  - Lệnh `dmesg` có thể hữu ích khi hệ thống gặp bất kì sự cố nào trong quá trình khởi động,
+
+- SYNTAX: `dmesg [options]`
+- options
+
+  -C –clear : clear the ring buffer.
+  -c –read-clear : clear the ring buffer after printing its contents.
+  -D –console-off : disable the messages printing to console.
+  -E –console-on : Enable printing messages to console.
+  -F –file file : read the messages from given file.
+  -h –help : display help text.
+  -k –kernel : print kernel messages.
+  -t –notime : do not print kernel’s timestamps.
+  -u –userspace : print userspace messages.
+
+4. Lệnh `iostat`
+
+- Trước khi chạy cần cài lệnh này nhé
+- Lệnh này được sử dụng để theo dõi số liệu thống kê đầu vào/ra của hệ thống cho các thiết bị phân vùng
+- Nó giám sát đầu vào/đầu ra của hệ thống bằng cách quan sát thời gian các thiết bị đang hoạt động liên quan đến tốc độ truyền tải trung bình của chúng
+- Các báo cáo tạo iostat có thể được sử dụng để thay đổi cấu hình hệ thống nhằm tăng cân bằng đầu vào/đầu ra giữa các đĩa vật lý
+
+- iostat: Get report and statistic. (Nhận báo cáo và thống kê)
+- iostat -x: Show more details statistics information.
+- iostat -c: Show only the cpu statistic.
+- iostat -d: Display only the device report.
+- iostat -xd: Show extended I/O statistic for device only.
+- iostat -k: Capture the statistics in kilobytes or megabytes.
+- iostat -k 2 3: Display cpu and device statistics with delay.
+- iostat -j ID mmcbkl0 sda6 -x -m 2 2: Display persistent device name statistics.
+- iostat -p: Display statistics for block devices.
+- iostat -N: Display lvm2 statistic information.
+
+- EX:
+
+- `iostat 1`: Hiển thị thống kê (Làm mới sau mỗi giây)
+
+5. `netstat`
+
+- `netstat -rnv`: Hiển thị thông tin PORT
+- `netstat | more`: Hiển thị nhũng gì được kết nối và ngắt kết nối, ...
+
+6. `free`
+
+- hiển thị tổng dung lượng trống có sẵn cùng với dung lượng bộ nhớ đã sử dụng và trao đổi bộ nhớ trong hệ thống, cũng như các bộ đệm được sử dụng bởi `kernel`.
+
+7. `cat /proc/cpuinfo`
+
+- Xem thông tin CPU
+
+8. `cat /proc/meminfo`
+
+- Xem thông tin bộ nhớ
+
+### System Logs Monitor (/var/log)
+
+- Trong này chứa các file log như boot, cron, mail, secure...
+- `tail file_name -f` (-f: follow nội dung một cách realtime)
+- Ví dụ: Vào tệp `/var/log` sau đó xem realtime nội dung `secure` bằng cách: `tail secure -f` (Sau đó đăng nhập từ putty thì thông báo realtime được bắn ra)
+
+### System Maintenance Commands (shutdown, init, reboot, halt)
+
+- `shudown`: Tắt máy
+- `init` (0 - 6)
+- Run level 0 (init 0): chế độ tắt máy.
+  – Run level 1 (init 1): chế độ này chỉ sử dụng được 1 người dùng.
+  – Run level 2 (init 2): chế độ đa người dùng nhưng không có dịch vụ NFS.
+  – Run level 3 (linit 3): chế độ đa người dùng, có đầy đủ các dịch vụ.
+  – Run level 4 (linit 4): chưa được sử dụng.
+  – Run level 5 (linit 5): chế độ đồ họa.
+  – Run level 6 (linit 6): khởi động lại máy.
+
+### Changing System Hostname (hostnamectl)
+
+- Có thể sửa trực tiếp trong file `/etc/hostname`, tuy nhiên sau khi sửa cần khởi động lại
+- Hoặc sử dụng lệnh sau thì không cần khởi động lại: `hostnamectl set-hostname newHostName`
+
+### Finding System Information (uname, dmidecode)
+
+- `uname -a`: Cho biết thông tin về hệ thống hoặc nhân
+- `dmidecode`: Cung cấp thông tin về bộ nhớ, bộ xử lý, ...
+- `cat /etc/redhat-release`: Xem phiên bản hệ điều hành
+
+### Finding System Architecture (arch)
+
+- Sự khác biệt giữa phiên bản 32bit và 64bit là số lượng phép tính thực hiện / giây
+- Để kiểm tra số bit của hệ điều hành: `arch` hoặc `uname -a`
+
+### Terminal Control Keys
+
+- `Ctr + u`: Xóa mọi thứ bạn nhập trên một dòng
+- `Ctr + c`: Stop or kill a command
+- `Ctr + z`: Đình chỉ một lệnh
+- `Ctr + d`: thoát khỏi chương trình
+
+### Terminal Commands (clear, exit, script)
+
+- `clear`: Xóa màn hình
+- `exit`: Thoát khỏi shell, terminal hoặc một user session
+- `script file_log`: Lưu trữ các hoạt động trong một tệp được đặt bởi người dùng (Để thoát quá trình ghi thực hiện `exit`)
+
+### Recover Root Password (single user mode)
+
+B1: Restart your computer
+B2: Edit grub
+B3: Change password
+B4: Reboot
+
+### Environment Variables
+
+- Để hiển thị tất cả các biến môi trường: `printenv` hoặc `env`
+- Để xem thông tin một biến sử dụng: `echo $SHELL`
+- Để Set một biến môi trường: (Sẽ biến mất khi logout)
+  - `export TEST=1`
+  - `echo $TEST`
+- Để Set một biến môi trường vĩnh viễn:
+  - `vi .bashrc`
+  - TEST=`123`
+  - `export TEST`
+- Để Set biến mỗi trường toàn cục vĩnh viễn:
+  - `vi /etc/profile` hoặc `vi /etc/bashrc`
+  - Test=`123`
+  - `export Test`
+
+### Special Permissions with setuid, setgid and sticky bit
+
+- Chúng ta biết rằng: Tất cả các quyền trên file hay directory đều được gọi là `bits` (Ví dụ `-rwx rwx rwx`)
+- Có 3 quyền bổ sung trong Linux
+
+  - `setuid`: đây là bit cho biết Linux chạy một chương trình với id người dùng hiệu quả của chủ sở hữu thay vì tệp thực thi
+  - `setgid`: đây là bit cho biết Linux chạy một chương trình với id nhóm hiệu quả của chủ sở hữu thay vì tệp thực thi
+    - Lưu ý: bit này chỉ có sẵn cho các tệp có quyền thực thi
+    - `setuid` và `setgid` thực ra không phải là một command
+  - sticky bit: đây là một bit được thiết lập trên files/directories chỉ cho phép chủ sở hữu hoặc tuyến đường xóa tệp hoặc thư mục đó
+
+- Để chỉ định quyền đặc biệt ở user level: `chmod u+s xyz.sh`
+- Để chỉ định quyền đặc biệt ở group level: `chmod g+s xyz.sh`
+- Để xóa quyền đặc biệt ở group level và user level:
+  - `chmod u-s xyz.sh`
+  - `chmod g-s xyz.sh`
+- Để tìm tất cả các tệp được thực thi trong linux với quyền `setuid` và `setgid`
+
+  - `find / -perm /6000 -type f`
+
+- Lưu ý: Các bit này hoạt động trên các tệp lập trình C, không phải trên các tập lệnh bash shell
+
+- `Sticky bit`: Nó được gán cho bit cuối cùng của permissions. VD: `-rwx rwx rwt`
+
+  - Ví dụ như trong tệp `tmp` sẽ có bit `t` ở cuối, bởi vì mọi người dùng trong hệ thống có quyền ghi nhưng không có quyền xóa
+
+- LAB Exercise
+
+1. Trở thành `root` và tạo một thư mục có tên `allinone`: `mkdir /allinone`
+2. Gán tất cả quyền cho thư mục đó: `chmod 777 /allinone`
+3. Trở thành `iafzal` và thư mục `imrandir` bên trong `allinone`: `mkdir imrandir`
+4. Gán tất cả quyền cho thư mục đó: `chmod 777 imrandir`
+5. Tạo 3 file `a, b, c` trong thư mục đó: `touch a b c`
+6. Mở một terminal khác và login với `spiderman`
+7. Vào thư mục `/allinone` và xóa `imrandir`: `rm -rf ỉmandir`
+
+- Sau khi thực hiện điều này `imrandir` thực sự bị xóa
+
+8. Trở lại root và gán quyền sticky bit cho `allinone`: `chmod +t /allinone`
+9. Trở lại `iafzal` và tạo lại thư mục `imrandir`: `mkdir imrandir`
+10. Gán lại toàn bộ quyền cho thư mục đó: `chmod 777 imrandir`
+11. Tạo lại 3 file `a, b, c`: `touch a b c`
+12. Trở lại spiderman
+13. vào `/allinone` và xóa `imrandir`: `rm -rf ỉmandir`\
+
+- Lúc này éo xóa được đâu
