@@ -206,7 +206,8 @@
 
 ### Một số lệnh cơ bản khác
 
-- Để vào tài khoản root ta nhấn: `su -`
+- Để vào tài khoản root ta nhấn: `sudo su -`
+- Để vào thư mục của user hiện tại thực hiện: `cd ~`
 - `clear`: Xóa màn hình
 - `cd`: Đến thư mục của người dùng hiện tại
 - `cd ..`: Quay lại thư mục cha
